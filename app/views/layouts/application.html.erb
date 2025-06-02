@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title><%= content_for(:title) || "StoreCraft" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      .animate-float { animation: float 6s ease-in-out infinite; }
+      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+      .animate-glow { animation: glow 2s ease-in-out infinite alternate; }
+      @keyframes glow { from { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); } to { box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); } }
+      .animate-fadeIn { animation: fadeIn 0.5s ease-in; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      .glass-effect { backdrop-filter: blur(16px); background: rgba(255, 255, 255, 0.9); }
+      .gradient-border { background: linear-gradient(white, white) padding-box, linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899) border-box; border: 2px solid transparent; }
+    </style>
+  </head>
+
+  <body class="h-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <!-- Navigation -->
+    <nav class="glass-effect border-b border-white/20 sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          <!-- Logo -->
+          <div class="flex items-center space-x-4">
+            <%= link_to products_path, class: "flex items-center space-x-3 group" do %>
+              <div class="relative">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 animate-glow">
+                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                  </svg>
+                </div>
+                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  StoreCraft
+                </h1>
+                <p class="text-sm text-gray-500 -mt-1">Product Management</p>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- Navigation Items -->
+          <div class="flex items-center space-x-4">
+            <% unless authenticated? %>
+              <%= link_to new_session_path,
+                  class: "group relative inline-flex items-center px-6 py-3 overflow-hidden text-base font-medium text-indigo-600 border-2 border-indigo-600 rounded-full hover:text-white transition-all duration-300 ease-out hover:bg-indigo-600" do %>
+                <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-indigo-600 group-hover:translate-x-0 ease">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                  </svg>
+                </span>
+                <span class="absolute flex items-center justify-center w-full h-full text-indigo-600 transition-all duration-300 transform group-hover:translate-x-full ease">
+                  Sign In
+                </span>
+                <span class="relative invisible">Sign In</span>
+              <% end %>
+            <% else %>
+              <% if authenticated? %>
+                <%= link_to new_product_path,
+                    class: "group relative inline-flex items-center px-6 py-3 overflow-hidden text-base font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" do %>
+                  <svg class="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                  </svg>
+                  New Product
+                <% end %>
+              <% end %>
+              
+              <%= button_to session_path,
+                  method: :delete,
+                  class: "group relative inline-flex items-center px-6 py-3 overflow-hidden text-base font-medium text-red-600 border-2 border-red-600 rounded-full hover:text-white transition-all duration-300 ease-out hover:bg-red-600",
+                  form: { class: "inline" } do %>
+                <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-red-600 group-hover:translate-x-0 ease">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                  </svg>
+                </span>
+                <span class="absolute flex items-center justify-center w-full h-full text-red-600 transition-all duration-300 transform group-hover:translate-x-full ease">
+                  Sign Out
+                </span>
+                <span class="relative invisible">Sign Out</span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <% if flash.any? %>
+      <div class="fixed top-24 right-6 z-50 space-y-3">
+        <% flash.each do |type, message| %>
+          <% if type == "notice" %>
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-lg animate-fadeIn max-w-sm">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span class="font-medium"><%= message %></span>
+              </div>
+            </div>
+          <% elsif type == "alert" %>
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-lg animate-fadeIn max-w-sm">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                <span class="font-medium"><%= message %></span>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Main Content -->
+    <main class="relative">
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 bg-white/60 backdrop-blur-lg border-t border-gray-200">
+      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <p class="text-gray-500 text-sm">
+            Built with ❤️ using Ruby on Rails & Tailwind CSS
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

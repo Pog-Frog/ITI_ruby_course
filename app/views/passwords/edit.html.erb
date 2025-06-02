@@ -1,0 +1,119 @@
+<div class="min-h-screen bg-gradient-to-tr from-green-50 via-emerald-50 to-teal-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="flex justify-center">
+      <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg transform rotate-12">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+        </svg>
+      </div>
+    </div>
+    <h1 class="mt-8 text-center text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">
+      Set new password
+    </h1>
+    <p class="mt-3 text-center text-gray-600">
+      Create a strong password to secure your account
+    </p>
+  </div>
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-10 px-8 shadow-2xl rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-xl">
+      <% if alert = flash[:alert] %>
+        <div class="mb-6 bg-red-50 border-l-4 border-red-500 rounded-lg p-4 animate-fadeIn">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-red-800" id="alert"><%= alert %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%= form_with url: password_path(params[:token]), method: :put, class: "space-y-8" do |form| %>
+        <div>
+          <%= form.label :password, "New password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+              </svg>
+            </div>
+            <%= form.password_field :password,
+                required: true,
+                autocomplete: "new-password",
+                placeholder: "Enter new password",
+                maxlength: 72,
+                class: "block w-full pl-10 pr-3 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 ease-in-out" %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
+        </div>
+
+        <div>
+          <%= form.label :password_confirmation, "Confirm password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <%= form.password_field :password_confirmation,
+                required: true,
+                autocomplete: "new-password",
+                placeholder: "Confirm new password",
+                maxlength: 72,
+                class: "block w-full pl-10 pr-3 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-200 ease-in-out" %>
+          </div>
+        </div>
+
+        <!-- Password Strength Indicator -->
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
+          <h4 class="text-sm font-semibold text-green-800 mb-3">Password strength requirements:</h4>
+          <ul class="space-y-2">
+            <li class="flex items-center text-sm text-gray-700">
+              <svg class="h-5 w-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              At least 8 characters
+            </li>
+            <li class="flex items-center text-sm text-gray-700">
+              <svg class="h-5 w-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Mix of letters and numbers
+            </li>
+            <li class="flex items-center text-sm text-gray-700">
+              <svg class="h-5 w-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              Both passwords must match
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <%= form.submit "Update password",
+              class: "group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-base font-medium rounded-xl text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg" %>
+        </div>
+
+        <div class="text-center pt-4">
+          <p class="text-sm text-gray-600">
+            Remember your password?
+            <%= link_to "Sign in", new_session_path, class: "font-medium text-green-600 hover:text-green-500 transition duration-150 ease-in-out" %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="mt-8 text-center">
+      <div class="inline-flex items-center px-4 py-2 bg-white rounded-full shadow-md border border-gray-100">
+        <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+        <span class="text-sm text-gray-600">Secure your account with a strong password</span>
+      </div>
+    </div>
+  </div>
+</div>
